@@ -44,6 +44,7 @@ Route::delete('territorio/{id}', [TerritorioController::class, 'deleteTerritorio
 //ROTAS DA API PARA AUTH
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
+Route::post('/forgot-password', [PassportAuthController::class, 'forgot_password'])->middleware('guest');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);

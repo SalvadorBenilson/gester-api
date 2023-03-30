@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use App\Models\User;
 
 class PassportAuthController extends Controller
@@ -16,7 +17,7 @@ class PassportAuthController extends Controller
         $this->validate($request, [
             'name' => 'required|min:4',
             'email' => 'required|email',
-            'password' => 'required|min:8',
+            'password' => 'required|min:10',
         ]);
   
         $user = User::create([
@@ -54,5 +55,18 @@ class PassportAuthController extends Controller
       
      return response()->json(['user' => $user], 200);
  
+    }
+
+    public function forgot_password(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+ 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+ 
+    return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => __($status)])
+                : back()->withErrors(['email' => __($status)]);
     }
 }
